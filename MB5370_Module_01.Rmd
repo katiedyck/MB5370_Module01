@@ -427,4 +427,7 @@ library(usethis)
   # git remote add origin https://github.com/katiedyck/MB5370_Module01.git
   # git push -u origin master
 # this created a master branch in the repository in GitHub, and the files `.gitignore` and `MB5370_Module01.git` are now visible
+
+# in RStudio terminal:
+  # git push
 ```
