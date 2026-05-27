@@ -430,4 +430,32 @@ library(usethis)
 
 # in RStudio terminal:
   # git push
+
+library(tidyverse)
+library(ggthemes)
+
+ggplot(mtcars, aes(x = mpg, y = hp, colour = factor(cyl))) +
+  theme_solid() +
+  geom_point() +
+  labs(x = "Miles/(US) gallon", y = "Gross horsepower")
+
+ggplot(mtcars, aes(x = mpg, y = hp, colour = factor(cyl))) +
+  theme_economist() +
+  geom_point() +
+  labs(x = "Miles/(US) gallon", y = "Gross horsepower")
+
+ggplot(mtcars, aes(x = mpg, y = hp, colour = factor(cyl))) +
+  theme_excel() +
+  geom_point() +
+  labs(x = "Miles/(US) gallon", y = "Gross horsepower")
+
+ggplot(mtcars, aes(x = mpg, y = hp, colour = factor(cyl))) +
+  theme_fivethirtyeight() +
+  geom_point() +
+  labs(x = "Miles/(US) gallon", y = "Gross horsepower")
+
+ggplot(mtcars, aes(x = mpg, y = hp, colour = factor(cyl))) +
+  theme_solarized() +
+  geom_point() +
+  labs(x = "Miles/(US) gallon", y = "Gross horsepower")
 ```
