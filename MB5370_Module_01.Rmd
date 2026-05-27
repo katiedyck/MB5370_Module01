@@ -419,4 +419,7 @@ library(usethis)
 
 # in the console:
   # usethis::usegit()
+
+# after staging and committing files from the Git pane, in the console:
+  # usethis::use_github()
 ```
