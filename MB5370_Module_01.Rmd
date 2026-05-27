@@ -418,8 +418,13 @@ library(usethis)
   # usethis::git_sitrep()
 
 # in the console:
-  # usethis::usegit()
+  # usethis::use_git()
 
 # after staging and committing files from the Git pane, in the console:
   # usethis::use_github()
+
+# in RStudio terminal:
+  # git remote add origin https://github.com/katiedyck/MB5370_Module01.git
+  # git push -u origin master
+# this created a master branch in the repository in GitHub, and the files `.gitignore` and `MB5370_Module01.git` are now visible
 ```
