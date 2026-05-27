@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(palmerpenguins)
+library(purrr)
 ```
 
 ```{r}
@@ -459,3 +460,125 @@ ggplot(mtcars, aes(x = mpg, y = hp, colour = factor(cyl))) +
   geom_point() +
   labs(x = "Miles/(US) gallon", y = "Gross horsepower")
 ```
+
+# WORKSHOP O4. 
+
+```{r setting up & installing Google Gemini and chattr}
+usethis::edit_r_environ()
+  # Google Gemini --> GEMINI_API_KEY="AIzaSyBX6osJpFNNjbTyEz93B8BthzV7KUtmec8"
+  # save the .Renviron file
+# restart R (Command+Shift+0)
+
+
+# Connecting `chattr` pkg to my model:
+  # usethis::edit_r_profile()
+    # options(.chattr_chat = ellmer::chat_google_gemini()) --> save the .Rprofile file
+# restart R (Command+Shift+0)
+
+# To interact with `chattr`:
+chattr::chattr_app()
+
+```
+
+```{r Base R: if and else}
+# Simple Example: Checking Sea Surface Temperature (SST)
+sst <- 30.2
+
+if (sst > 29.5) {
+  print("Warning: Marine heatwave threshold exceeded!")
+} else {
+  print("SST remains within baseline parameters.")
+}
+```
+
+```{r dplyr: if_else(), case_when()}
+# Sample coral data
+coral_monitoring <- tibble(
+  site = c("Site_A", "Site_B", "Site_C"),
+  depth_m = c(12, 35, 8)
+)
+
+# Classify depth using if_else
+coral_monitoring <- coral_monitoring %>% 
+  mutate(zone = if_else(depth_m > 30, "Deep Reef", "Shallow Reef"))
+coral_monitoring
+
+  # mutate() creates a new column in the tibble based on the if_else() condition - if the reef is deeper than 30 meters it is classified as a Deep Reef, otherwise it is classified as a Shallow Reef
+
+  # %>% is the pipe operator. It allows you to pass a series of expressions; it passes the result of the expression that's on the left of the pipe as the first argument for the right-hand side function.
+
+
+coral_monitoring <- coral_monitoring %>% 
+  mutate(reef_category = case_when(
+    depth_m < 10  ~ "Lagoon / Flats",
+    depth_m <= 30 ~ "Crest / Slope",
+    depth_m > 30  ~ "Mesophotic / Deep",
+    TRUE          ~ "Unclassified" # Catch-all remainder
+  ))
+coral_monitoring
+
+# When you have more than two possibilities, stacking multiple if-else blocks becomes unreadable. case_when() provides a clean, sequential evaluation layout using formula tildes (~).
+```
+
+```{r Creating a tibble with chattr}
+# Entered into a chattr chat: 
+#   Write a script that creates a tibble named marine_stations that contains a column called salinity with values 35, 28, 32, and 12. Use the pipe operator (%>%) and mutate() combined with case_when() to create a new column called environment_type. Classify values below 15 as "Estuarine", values between 15 and 30 as "Brackish", and values above 30 as "Marine".
+
+marine_stations <- tibble(salinity = c(35, 28, 32, 12)) %>%
+  mutate(
+    environment_type = case_when(
+      salinity < 15 ~ "Estuarine",
+      salinity >= 15 & salinity <= 30 ~ "Brackish",
+      salinity > 30 ~ "Marine",
+      TRUE ~ NA_character_ # Catch-all for any other cases, though not strictly needed here
+    )
+  )
+
+marine_stations
+
+```
+
+```{r Base R: for loops}
+# Classic loop anatomy
+
+for (year in 2020:2024) {
+  print(paste("Processing climate data for year:", year))
+}
+
+
+# Loop across index sequences
+transect_lengths <- c(50, 100, 25, 75)
+
+for (i in seq_along(transect_lengths)) {
+  print(paste("Transect number", i, "measures", transect_lengths[i], "metres."))
+}
+
+number_turtles <- c(17, 39, 56, 44)
+for (i in number_turtles) {
+  print(paste("There were", i, "turtles on the beach last night."))
+}
+```
+
+```{r Tidyverse Alternative: Functional Programming (purrr)}
+# Different map functions in the `purrr` package map a specific operation onto every item in a list or vector, automatically ensuring that your output matches the precise data structure you expect.
+
+# Using a standard for-loop:
+site_areas <- c(144, 400, 625)
+results <- numeric(length(site_areas)) # Must build an empty container first
+
+for(i in seq_along(site_areas)) {
+  results[i] <- sqrt(site_areas[i])
+}
+
+# Using the purrr equivalent:
+# Map directly and define your expected output type explicitly
+mapped_results <- map_dbl(site_areas, sqrt)
+mapped_results
+
+
+# purrr pipelines can be combined inside data frames to split analyses across separate groups:
+iris %>% 
+  split(.$Species) %>% 
+  map(~summary(.x))     # iterate a summary function over split lists of data
+```
+
