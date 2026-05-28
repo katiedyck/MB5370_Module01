@@ -412,6 +412,7 @@ ggplot(penguins, aes(x = species, y = flipper_length_mm, colour = species)) +
 ## WORKSHOP 03. REPRODUCIBLE RESEARCH IN MARINE SCIENCE
 
 ```{r linking GitHub and RStudio}
+
 library(usethis)
 
 # in the console:
@@ -461,9 +462,10 @@ ggplot(mtcars, aes(x = mpg, y = hp, colour = factor(cyl))) +
   labs(x = "Miles/(US) gallon", y = "Gross horsepower")
 ```
 
-# WORKSHOP O4. 
+# WORKSHOP 04. DEVELOPERS TOOLBOX & AI
 
 ```{r setting up & installing Google Gemini and chattr}
+
 usethis::edit_r_environ()
   # Google Gemini --> GEMINI_API_KEY="AIzaSyBX6osJpFNNjbTyEz93B8BthzV7KUtmec8"
   # save the .Renviron file
@@ -481,6 +483,7 @@ chattr::chattr_app()
 ```
 
 ```{r Base R: if and else}
+
 # Simple Example: Checking Sea Surface Temperature (SST)
 sst <- 30.2
 
@@ -492,6 +495,7 @@ if (sst > 29.5) {
 ```
 
 ```{r dplyr: if_else(), case_when()}
+
 # Sample coral data
 coral_monitoring <- tibble(
   site = c("Site_A", "Site_B", "Site_C"),
@@ -521,6 +525,7 @@ coral_monitoring
 ```
 
 ```{r Creating a tibble with chattr}
+
 # Entered into a chattr chat: 
 #   Write a script that creates a tibble named marine_stations that contains a column called salinity with values 35, 28, 32, and 12. Use the pipe operator (%>%) and mutate() combined with case_when() to create a new column called environment_type. Classify values below 15 as "Estuarine", values between 15 and 30 as "Brackish", and values above 30 as "Marine".
 
@@ -539,6 +544,7 @@ marine_stations
 ```
 
 ```{r Base R: for loops}
+
 # Classic loop anatomy
 
 for (year in 2020:2024) {
@@ -560,6 +566,7 @@ for (i in number_turtles) {
 ```
 
 ```{r Tidyverse Alternative: Functional Programming (purrr)}
+
 # Different map functions in the `purrr` package map a specific operation onto every item in a list or vector, automatically ensuring that your output matches the precise data structure you expect.
 
 # Using a standard for-loop:
@@ -580,5 +587,79 @@ mapped_results
 iris %>% 
   split(.$Species) %>% 
   map(~summary(.x))     # iterate a summary function over split lists of data
+
+
+# From chattr prompt: "I have a list of three vectors containing fish count data. Write a for-loop to calculate the mean of each, and then show me the exact parallel way to do it using purrr's map_dbl function."
+
+# Sample data
+fish_counts_list <- list(
+  river_a = c(10, 12, 8, 15, 11),
+  lake_b = c(25, 22, 28, 20, 26, 24),
+  stream_c = c(5, 7, 6, 9)
+)
+
+# Using a for-loop
+mean_counts_for <- vector("numeric", length(fish_counts_list))
+names(mean_counts_for) <- names(fish_counts_list)
+
+for (i in seq_along(fish_counts_list)) {
+  mean_counts_for[i] <- mean(fish_counts_list[[i]])
+}
+
+mean_counts_for
+
+# Using purrr map function:
+mean_counts_map <- map_dbl(fish_counts_list, mean)
+mean_counts_map
+
+```
+
+```{r Writing custom functions}
+
+# Function Definition
+calculate_coral_mortality <- function(initial_count, surviving_count) {
+  
+  # Logic safety switch using our conditional tools!
+  if (initial_count <= 0) {
+    stop("Initial count must be greater than zero.")
+  }
+  
+  mortality_rate <- (initial_count - surviving_count) / initial_count
+  return(mortality_rate)
+  
+}
+
+# Utilizing your custom function
+calculate_coral_mortality(initial_count = 120, surviving_count = 84)
+
+
+# Custom function: convert temperature from degrees celcius to degrees fahrenheit
+convert_temp_c_to_f <- function(C) {
+  
+  # conditional safety check
+  if (C < -273.15) {
+    stop("Cannot be below absolute zero!")
+  }
+  
+  fahrenheit <- (C * 9/5) + 32
+  #return(fahrenheit)
+  print(paste(C, "\u00B0C =", round(fahrenheit, digits = 2), "\u00B0F."))
+}
+
+convert_temp_c_to_f(22)
+convert_temp_c_to_f(-275)
+convert_temp_c_to_f(-18)
+convert_temp_c_to_f(50)
+convert_temp_c_to_f(-35)
+convert_temp_c_to_f(16)
+```
+
+```{r Advanced Scripting Challenges}
+
+# Challenge 1: Nested Multi-Vector Iteration ----
+
+# In real-world field surveys, calculations often depend on matching values across multiple lists or matrices. Read the documentation for purrr::map2_dbl(). Given a vector of raw survey counts counts <- c(15, 24, 8, 42) and a vector of species-specific scaling factors factors <- c(1.2, 0.8, 2.5, 1.1), write a mapping statement that iterates across both vectors simultaneously to return a single vector of scaled abundance values. Do not use a manual index loop.
+
+
 ```
 
