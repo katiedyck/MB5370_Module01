@@ -432,34 +432,6 @@ library(usethis)
 
 # in RStudio terminal:
   # git push
-
-library(tidyverse)
-library(ggthemes)
-
-ggplot(mtcars, aes(x = mpg, y = hp, colour = factor(cyl))) +
-  theme_solid() +
-  geom_point() +
-  labs(x = "Miles/(US) gallon", y = "Gross horsepower")
-
-ggplot(mtcars, aes(x = mpg, y = hp, colour = factor(cyl))) +
-  theme_economist() +
-  geom_point() +
-  labs(x = "Miles/(US) gallon", y = "Gross horsepower")
-
-ggplot(mtcars, aes(x = mpg, y = hp, colour = factor(cyl))) +
-  theme_excel() +
-  geom_point() +
-  labs(x = "Miles/(US) gallon", y = "Gross horsepower")
-
-ggplot(mtcars, aes(x = mpg, y = hp, colour = factor(cyl))) +
-  theme_fivethirtyeight() +
-  geom_point() +
-  labs(x = "Miles/(US) gallon", y = "Gross horsepower")
-
-ggplot(mtcars, aes(x = mpg, y = hp, colour = factor(cyl))) +
-  theme_solarized() +
-  geom_point() +
-  labs(x = "Miles/(US) gallon", y = "Gross horsepower")
 ```
 
 # WORKSHOP 04. DEVELOPERS TOOLBOX & AI
@@ -656,10 +628,60 @@ convert_temp_c_to_f(16)
 
 ```{r Advanced Scripting Challenges}
 
-# Challenge 1: Nested Multi-Vector Iteration ----
+# Challenge 1: Nested Multi-Vector Iteration
 
 # In real-world field surveys, calculations often depend on matching values across multiple lists or matrices. Read the documentation for purrr::map2_dbl(). Given a vector of raw survey counts counts <- c(15, 24, 8, 42) and a vector of species-specific scaling factors factors <- c(1.2, 0.8, 2.5, 1.1), write a mapping statement that iterates across both vectors simultaneously to return a single vector of scaled abundance values. Do not use a manual index loop.
 
+counts <- c(15, 24, 8, 42)
+factors <- c(1.2, 0.8, 2.5, 1.1)
 
+map2_dbl(counts, factors, .f = `*`)
+
+
+# Challenge 2: The Robust Data Wrangling Pipeline Function
+
+# Create a custom function named clean_and_classify_survey that handles complex data frame structures. The function must fulfill these criteria:
+    # Accept a data frame and a column name threshold parameter as inputs.
+    # Safely check if the specified column name exists within the passed data frame; if it does not, trigger a user-friendly error message using stop().
+    # Filter out rows containing missing values (NA) within that specific column.
+    # Use the pipe operator and mutate() along with a vectorised conditional (if_else() or case_when()) to append a status string variable classification based on your threshold parameter.
+    # Return the cleaned, altered data frame to the global environment.
+
+# Test your custom pipeline using a mock tibble that contains at least one missing value to confirm your code handles anomalies without crashing.
+
+clean_and_classify_survey <- function(df, col_name, threshold) {
+  # Safely check if the specified column name exists
+  if (!col_name %in% names(df)) {
+    stop(paste0("Error: Column '", col_name, "' not found in the data frame."))
+  }
+
+  # Convert col_name to a symbol for tidy evaluation
+  col_sym <- sym(col_name)
+
+  df %>%
+    # Filter out rows containing missing values (NA) within that specific column
+    filter(!is.na(!!col_sym)) %>%
+    # Append a status string variable 'classification' based on the threshold
+    mutate(classification = if_else(!!col_sym > threshold, "High", "Low"))
+}
+
+# Test your custom pipeline using a mock tibble
+mock_survey_data <- tibble::tibble(
+  plot_id = 1:7,
+  species_count = c(15, 24, NA, 8, 42, 12, NA),
+  habitat_type = c("Forest", "Grassland", "Forest", "Wetland", "Grassland", "Forest", "Wetland")
+)
+
+# Test 1: Successful run with valid column and NAs handled
+cleaned_classified_data <- clean_and_classify_survey(mock_survey_data, "species_count", 20)
+print(cleaned_classified_data)
+
+# Test 2: Confirm your code handles anomalies without crashing (non-existent column)
+# This will trigger the stop() error message
+tryCatch({
+  clean_and_classify_survey(mock_survey_data, "non_existent_column", 20)
+}, error = function(e) {
+  message(e$message)
+})
 ```
 
