@@ -434,7 +434,62 @@ library(usethis)
   # git push
 ```
 
+
 # WORKSHOP 04. DEVELOPERS TOOLBOX & AI
+
+All 3 of the graphs below were created using Copilot, an AI coding assistant that can generate code based on natural language prompts. Comments in the code chunks indicate the prompts I used to generate the code for each graph.
+
+```{r Copilot}
+
+# Load tidyverse and palmerpenguins libraries
+library(tidyverse)
+library(palmerpenguins)
+
+# Create a ggplot scatter plot using the penguins dataset. 
+# Plot bill_length_mm on the x-axis and bill_depth_mm on the y-axis.
+# Color points by species and use geom_point with size 3.
+# Add a minimal theme and clean labels.
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point(size = 3) +
+  theme_minimal() +
+  labs(
+    title = "Bill Length vs. Bill Depth of Palmer Penguins",
+    x = "Bill Length (mm)",
+    y = "Bill Depth (mm)",
+    color = "Species"
+  )
+
+# Create a ggplot boxplot using the penguins dataset.
+# Compare flipper_length_mm across different species.
+# Facet by island.
+# Use custom color palettes.
+ggplot(penguins, aes(x = species, y = flipper_length_mm, fill = species)) +
+  geom_boxplot() +
+  facet_wrap(~ island) +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal() +
+  labs(
+    title = "Flipper Length of Palmer Penguins by Species and Island",
+    x = "Species",
+    y = "Flipper Length (mm)",
+    fill = "Species"
+  )  
+
+# Create a ggplot scatterplot using the penguins dataset.
+# Compare body_mass_g against flipper_length_mm.
+# Add a linear regression trend line with geom_smooth(method = "lm") for each species.
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_minimal() +
+  labs(
+    title = "Body Mass vs. Flipper Length of Palmer Penguins",
+    x = "Flipper Length (mm)",
+    y = "Body Mass (g)",
+    color = "Species"
+  )  
+```
+
 
 ```{r setting up & installing Google Gemini and chattr}
 
