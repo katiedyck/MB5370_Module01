@@ -1,0 +1,780 @@
+---
+title: "Module 1: Introduction to Programming"
+author: "Katie Dyck"
+date: "2026-05-20"
+oexecute:
+  echo: false
+format:
+    html:
+        code-fold: show
+        code-summary: "Show code"
+        code-tools: true
+        code-block-bg: true
+        code-block-border-left: "darkgrey"
+        code-overflow: wrap
+        toc: true
+        number-sections: true
+        number-depth: 4
+        toc-location: left
+        toc-expand: 2
+        toc-title: Contents
+        syntax-highlighting: github
+        theme: cosmo
+        fig-height: 6
+        fig-width: 10
+        fig-cap-location: bottom
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load packages}
+# load packages
+
+library(tidyverse)
+library(palmerpenguins)
+library(purrr)
+```
+
+```{r}
+getwd()
+```
+
+# **Workshop 1: Introduction**
+
+This section contains code and programming from the first workshop. A basic introduction to R.
+
+```{r Workshop 1 Code}
+## ------ Getting Started ------ ####
+# This section introduces us to R by using it as a simple calculator.
+
+2 + 1
+1:30
+# 6 *
+  # not complete - when you run this line, console asks you to unput a number after the asterisk
+
+# 6 % 4  - doesn't work!
+6 / 4
+
+
+
+## ------ Variables and Assignment ------ ####
+# This section focuses on understanding how data is stored in R and why that matters.
+
+age <- 25
+first_name <- 'Bill'
+
+age
+first_name
+
+age + 1
+age + age
+
+# In R, you can’t use a number at the beginning of an object name and you can’t use some special symbols, including spaces.
+# 01_age <- 25 # starts with a number
+# !_age <- 25 # no special symbols
+# age bob <- 25 # no spaces
+Age <- 41 # cases matter
+
+`age bob` <- 25 # no spaces, but with back ticks
+# This is useful in some situations, however, it is better to use informative object names to make your code readable
+
+# Run an algorithm:
+25 + 15.1 + 20.25
+x <- 30
+25 + 15.1 + 20.25 + x
+
+
+
+## ------ Functions ------ ####
+# This section focuses on exploring built-in R functions
+
+years_old <- 25.7
+round(years_old)  # round up
+floor(years_old)  # returns the largest integer not greater than elements of 'years_old'
+
+years_old <- 25.765
+round(years_old, digits = 2)
+
+age <- 30
+name <- "Katie"
+paste(name, "is", age, "years old.", sep = " ")
+paste(name, "is almost", age + 1, "years old.", sep = " ")
+
+
+
+## ------ Debugging ------ ####
+# Debugging is the process of finding and fixing errors in your code.
+
+# Misconceptions
+# variables don't work the same way as they do in spreadsheets
+
+grade <- 55
+total <- grade + 10
+print(total)
+grade <- 90
+print(total)  # value of total in a spreadsheet would be 100, but here a variable holds the value it was assigned (65)
+total <- grade + 10
+print(total)
+
+p <- 2
+z <- 5
+out <- p * z
+print(out)
+
+# debugging errors
+# out <- p * a   # undefined variable 'a'
+## > Error: object 'a' not found
+out <- p * z
+
+x <- 1
+is.character(x)
+is.integer(x)
+is.numeric(x)
+is.logical(x)
+
+# my_quiz <- c("uno",
+#              "dos",
+#              "tres",
+#              "cuatro"   # comma is missing!
+#              "cinco")
+# print(my_quis)   # spelling error
+# str(my_quiz)
+# len(my_quiz)   # len() not a function
+
+my_quiz_fixed <- c("uno",
+             "dos",
+             "tres",
+             "cuatro",
+             "cinco")
+print(my_quiz_fixed)
+str(my_quiz_fixed)
+length(my_quiz_fixed)
+
+
+
+## ------ Data types ------ ####
+
+my_numeric_variable <- 4.2
+class(my_numeric_variable)
+typeof(my_numeric_variable)
+attributes(my_numeric_variable)
+length(my_numeric_variable)
+
+
+
+## ------ Data structures ------ ####
+
+# A vector is a collection of elements that are most commonly of the type character, numeric, integer, logical.
+y <- c(1,2,3)
+class(y)
+typeof(y)
+z <- c("Sarah", "Tracy", "John")
+class(z)
+typeof(z)
+
+# Values inside a list can be several different types.
+x <- list(1, "A", TRUE)
+x
+class(x)
+typeof(x)
+length(x)
+x[[2]]   # use square brackets to retrieve individual elements in a list
+
+
+
+## ------ Data frames and tibbles ------ ####
+# 2D or "rectangular" data files
+
+my_dataframe <- data.frame(
+  no = c(1,2,3),
+  name = c("Tracey", "John", "Pete"),
+  logical = c(TRUE, FALSE, TRUE)
+)
+my_dataframe
+str(my_dataframe)
+
+my_dataframe$no = as.factor(my_dataframe$no)
+str(my_dataframe)
+
+
+
+## ------ Packages and libraries ------ ####
+# Using software that other people have written
+
+# install.packages("ggplot2", "tidyr", "earthtones", "dplyr")
+# library(ggplot2)
+
+
+
+## ------ Coding best practices ------ ####
+
+# To take a .csv file and turn it into a plot of the abundance of a single species:
+#   1. read the .csv file dataset into R - read_csv()
+#   2. view the dataset - e.g. str('dataset_name_here'), head('dataset_name_here'), glimpse('dataset_name_here')
+#   3. identify which columns/variables you want to use to create the plot, and which plot type (geom_*()) you want to create
+#   4. create your plot with ggplot() + geom_*()
+```
+
+
+# **Workshop 2: Data Visualization**
+
+```{r mpg dataset}
+str(mpg)
+# "displ" = engine size (litres)
+# "hwy" = car's fuel efficiency (mpg)
+```
+
+## Create a `ggplot`
+
+```{r Basic ggplots}
+# These create the exact same plot:
+ggplot(mpg) +
+    geom_point(aes(x = displ, y = hwy))
+ggplot(mpg, aes(displ, hwy)) +
+    geom_point()
+
+# change transparency by class (alpha)
+ggplot(mpg, aes(displ, hwy, alpha = drv)) +
+    geom_point()
+
+# change colour by class
+ggplot(mpg, aes(displ, hwy, color = drv)) +
+    geom_point()
+
+# change point shape by class
+ggplot(mpg, aes(displ, hwy, shape = drv)) +
+    geom_point()
+
+# change point size by class
+# change colour by class
+ggplot(mpg, aes(displ, hwy, size = drv)) +
+    geom_point()
+
+# change shape, size, AND colour by class
+ggplot(mpg, aes(displ, hwy, color = drv, shape = drv, size = drv)) +
+    geom_point()
+
+ggplot(mpg, aes(displ, hwy, color = drv, shape = drv, size = drv, alpha = drv)) +
+    geom_point()
+# adding "alpha" isn't necessary in this case
+
+ggplot(mpg, aes(displ, hwy, colour = displ < 5)) +
+    geom_point()
+```
+
+```{r facet_wrap() and facet_grid()}
+ggplot(mpg, aes(displ, hwy, colour = drv)) +
+    geom_jitter() +
+    facet_wrap(~ drv) +
+    theme(legend.position = "none",
+          plot.title = element_text(face = "bold")) +
+    labs(title = "Fuel efficiency vs. engine size, sorted by drive train type",
+         x = "Engine displacement (L)",
+         y = "Highway (mpg)")
+
+ggplot(mpg) +
+    geom_point(aes(displ, hwy)) +
+    facet_wrap(~ class, nrow = 2)
+
+# facet_grid() is used with more than one variable
+ggplot(mpg) +
+    geom_point(aes(displ, hwy)) +
+    facet_grid(drv ~ cyl)
+
+# use a . if you don't want to facet in the rows or columns dimension
+ggplot(mpg) +
+    geom_point(aes(displ, hwy)) +
+    facet_grid(. ~ cyl)
+ggplot(mpg) +
+    geom_point(aes(displ, hwy)) +
+    facet_grid(drv ~ .)
+```
+
+```{r}
+ggplot(mpg) +
+    geom_smooth(aes(displ, hwy))
+
+ggplot(mpg, aes(displ, hwy)) +
+    geom_point() +
+    geom_smooth(se = FALSE)
+
+ggplot(mpg, aes(displ, hwy)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE)  # lm = 
+```
+
+```{r}
+ggplot(mpg) +
+    geom_smooth(aes(displ, hwy, linetype = drv))
+```
+
+You can create plots with multiple geoms to show relationships between different variables in the data:
+
+```{r Using multiple geoms}
+ggplot(mpg) +
+    geom_point(aes(displ, hwy, colour = drv)) +
+    geom_smooth(aes(displ, hwy, colour = drv, linetype = drv))
+```
+
+You can use mapping in specific layers to enable the display of different aesthetics in different layers:
+
+```{r Advanced plots}
+ggplot(mpg, aes(displ, hwy)) +
+    geom_smooth() +
+    geom_point(aes(colour = class))
+
+ggplot(mpg, aes(displ, hwy)) +
+    geom_point(aes(colour = class)) +
+    geom_smooth(data = filter(mpg, class == "subcompact"), se = FALSE) +
+    labs(caption = "Data has been filtered for class 'subcompact'")
+```
+
+## Transformations and Stats
+
+```{r diamonds dataset}
+str(diamonds)
+```
+
+```{r diamonds plot 1}
+ggplot(diamonds) +
+    geom_bar(aes(x = cut))
+```
+
+-   *bar charts*, *histograms*, and *frequency polygrams* "bin" data and then plot bin counts (the number of data points that fall in each bin).
+-   *smoothers* fit a model to the data and then plot predictions from the model.
+-   *boxplots* compute a summary of the distribution and then display a specially formatted box.
+
+`geoms` and `stats` can generally be used interchangeably.
+
+```{r diamonds plot 2}
+ggplot(diamonds) +
+    stat_count(mapping = aes(x = cut))
+```
+
+```{r Overriding ggplot defaults}
+demo <- tribble(
+    ~cut, ~freq,
+    "Fair", 1610,
+    "Good", 4906,
+    "Very Good", 12082,
+    "Premium", 13791,
+    "Ideal", 21551
+)
+demo
+
+ggplot(demo) +
+    geom_bar(aes(x = cut, y = freq), stat = "identity")
+
+# override default mapping from transformed variables to aesthetics
+# e.g. display a bar chart of the PROPORTION of your total diamond dataset rather than a count
+ggplot(diamonds) +
+    geom_bar(aes(x = cut, y = stat(prop), group = 1))
+
+# you can add statistical details to plots:
+ggplot(diamonds) +
+    stat_summary(
+        mapping = aes(x = cut, y = depth),
+        fun.min = min,
+        fun.max = max,
+        fun = median
+    )
+```
+
+Adjusting the aesthetics (`aes()`) allows you to modify how your plot looks and what relationships it shows:
+
+```{r Aesthetic adjustments}
+# for bar plots, 'colour' changes the OUTLINE colour
+ggplot(diamonds) +
+    geom_bar(mapping = aes(x = cut, colour = cut))
+
+# 'fill' changes the FILL colour
+ggplot(diamonds) +
+    geom_bar(mapping = aes(x = cut, fill = cut))
+
+# default: position = "identity"
+ggplot(diamonds) +
+    geom_bar(aes(x = cut, fill = clarity)) 
+
+# alter transparency
+ggplot(diamonds, aes(x = cut, fill = clarity)) +
+    geom_bar(alpha = 1/5, position = "identity")
+
+# colour bar outlines with no fill colour
+ggplot(diamonds, aes(x = cut, colour = clarity)) +
+    geom_bar(fill = NA, position = "identity")
+
+# position = "fill" makes each set of stacked bars the same height
+ggplot(diamonds) +
+    geom_bar(aes(x = cut, fill = clarity), position = "fill")
+
+ggplot(diamonds) +
+    geom_bar(aes(x = cut, fill = clarity), position = "dodge")
+
+# position = "jitter" adds small amount of random noise to each point to avoid overplotting when points overlap...good for scatterplots, not barplots
+ggplot(diamonds) +
+    geom_bar(aes(x = cut, fill = clarity), position = "jitter")
+```
+```{r penguins dataset}
+str(penguins)
+
+ggplot(penguins, aes(x = species, fill = species)) +
+    geom_bar()
+
+ggplot(penguins, aes(x = species, y = sex, fill = island)) +
+    geom_col(position = "dodge")
+
+ggplot(penguins, aes(x = species, y = flipper_length_mm, colour = species)) +
+    geom_jitter() +
+    theme(legend.position = "none")
+```
+
+
+# **Workshop 3: Reproducible Research in Marine Science**
+
+```{r linking GitHub and RStudio}
+
+library(usethis)
+
+# in the console:
+  # credentials::git_credential_ask()
+  # usethis::git_sitrep()
+
+# in the console:
+  # usethis::use_git()
+
+# after staging and committing files from the Git pane, in the console:
+  # usethis::use_github()
+
+# in RStudio terminal:
+  # git remote add origin https://github.com/katiedyck/MB5370_Module01.git
+  # git push -u origin master
+# this created a master branch in the repository in GitHub, and the files `.gitignore` and `MB5370_Module01.git` are now visible
+
+# in RStudio terminal:
+  # git push
+```
+
+
+# **Workshop 4: Developers Toolbox & AI**
+
+All 3 of the graphs below were created using Copilot, an AI coding assistant that can generate code based on natural language prompts. Comments in the code chunks indicate the prompts I used to generate the code for each graph.
+
+## GitHub Copilot
+
+```{r Copilot}
+
+# Load tidyverse and palmerpenguins libraries
+library(tidyverse)
+library(palmerpenguins)
+
+# Create a ggplot scatter plot using the penguins dataset. 
+# Plot bill_length_mm on the x-axis and bill_depth_mm on the y-axis.
+# Color points by species and use geom_point with size 3.
+# Add a minimal theme and clean labels.
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point(size = 3) +
+  theme_minimal() +
+  labs(
+    title = "Bill Length vs. Bill Depth of Palmer Penguins",
+    x = "Bill Length (mm)",
+    y = "Bill Depth (mm)",
+    color = "Species"
+  )
+
+# Create a ggplot boxplot using the penguins dataset.
+# Compare flipper_length_mm across different species.
+# Facet by island.
+# Use custom color palettes.
+ggplot(penguins, aes(x = species, y = flipper_length_mm, fill = species)) +
+  geom_boxplot() +
+  facet_wrap(~ island) +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal() +
+  labs(
+    title = "Flipper Length of Palmer Penguins by Species and Island",
+    x = "Species",
+    y = "Flipper Length (mm)",
+    fill = "Species"
+  )  
+
+# Create a ggplot scatterplot using the penguins dataset.
+# Compare body_mass_g against flipper_length_mm.
+# Add a linear regression trend line with geom_smooth(method = "lm") for each species.
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_minimal() +
+  labs(
+    title = "Body Mass vs. Flipper Length of Palmer Penguins",
+    x = "Flipper Length (mm)",
+    y = "Body Mass (g)",
+    color = "Species"
+  )  
+```
+
+## Google Gemini & `chattr`
+
+```{r setting up & installing Google Gemini and chattr}
+
+# in the console --> usethis::edit_r_environ()
+  # in the console --> GEMINI_API_KEY="<my_custom_code>"
+  # save the .Renviron file
+# restart R (Command+Shift+0)
+
+
+# Connecting `chattr` pkg to my model:
+  # usethis::edit_r_profile()
+    # options(.chattr_chat = ellmer::chat_google_gemini()) --> save the .Rprofile file
+# restart R (Command+Shift+0)
+
+# To interact with `chattr`, type into the console:
+  # chattr::chattr_app()
+# or use my keyboard shortcut (Ctrl + Command + C)
+```
+
+## `if()` / `else()`
+
+```{r Base R: if and else}
+
+# Simple Example: Checking Sea Surface Temperature (SST)
+sst <- 30.2
+
+if (sst > 29.5) {
+  print("Warning: Marine heatwave threshold exceeded!")
+} else {
+  print("SST remains within baseline parameters.")
+}
+```
+
+## `if_else()` / `case_when()`
+
+```{r dplyr: if_else(), case_when()}
+
+# Sample coral data
+coral_monitoring <- tibble(
+  site = c("Site_A", "Site_B", "Site_C"),
+  depth_m = c(12, 35, 8)
+)
+
+# Classify depth using if_else
+coral_monitoring <- coral_monitoring %>% 
+  mutate(zone = if_else(depth_m > 30, "Deep Reef", "Shallow Reef"))
+coral_monitoring
+
+  # mutate() creates a new column in the tibble based on the if_else() condition - if the reef is deeper than 30 meters it is classified as a Deep Reef, otherwise it is classified as a Shallow Reef
+
+  # %>% is the pipe operator. It allows you to pass a series of expressions; it passes the result of the expression that's on the left of the pipe as the first argument for the right-hand side function.
+
+
+coral_monitoring <- coral_monitoring %>% 
+  mutate(reef_category = case_when(
+    depth_m < 10  ~ "Lagoon / Flats",
+    depth_m <= 30 ~ "Crest / Slope",
+    depth_m > 30  ~ "Mesophotic / Deep",
+    TRUE          ~ "Unclassified" # Catch-all remainder
+  ))
+coral_monitoring
+
+# When you have more than two possibilities, stacking multiple if-else blocks becomes unreadable. case_when() provides a clean, sequential evaluation layout using formula tildes (~).
+```
+
+## Create a tibble with `chattr`
+
+```{r Creating a tibble with chattr}
+
+# Entered into a chattr chat: 
+#   Write a script that creates a tibble named marine_stations that contains a column called salinity with values 35, 28, 32, and 12. Use the pipe operator (%>%) and mutate() combined with case_when() to create a new column called environment_type. Classify values below 15 as "Estuarine", values between 15 and 30 as "Brackish", and values above 30 as "Marine".
+
+marine_stations <- tibble(salinity = c(35, 28, 32, 12)) %>%
+  mutate(
+    environment_type = case_when(
+      salinity < 15 ~ "Estuarine",
+      salinity >= 15 & salinity <= 30 ~ "Brackish",
+      salinity > 30 ~ "Marine",
+      TRUE ~ NA_character_ # Catch-all for any other cases, though not strictly needed here
+    )
+  )
+
+marine_stations
+
+```
+
+## for loops
+
+```{r Base R: for loops}
+
+# Classic loop anatomy
+
+for (year in 2020:2024) {
+  print(paste("Processing climate data for year:", year))
+}
+
+
+# Loop across index sequences
+transect_lengths <- c(50, 100, 25, 75)
+
+for (i in seq_along(transect_lengths)) {
+  print(paste("Transect number", i, "measures", transect_lengths[i], "metres."))
+}
+
+number_turtles <- c(17, 39, 56, 44)
+for (i in number_turtles) {
+  print(paste("There were", i, "turtles on the beach last night."))
+}
+```
+
+## Programming with the `purrr` package
+
+```{r Tidyverse Alternative: Functional Programming (purrr)}
+
+# Different map functions in the `purrr` package map a specific operation onto every item in a list or vector, automatically ensuring that your output matches the precise data structure you expect.
+
+# Using a standard for-loop:
+site_areas <- c(144, 400, 625)
+results <- numeric(length(site_areas)) # Must build an empty container first
+
+for(i in seq_along(site_areas)) {
+  results[i] <- sqrt(site_areas[i])
+}
+
+# Using the purrr equivalent:
+# Map directly and define your expected output type explicitly
+mapped_results <- map_dbl(site_areas, sqrt)
+mapped_results
+
+
+# purrr pipelines can be combined inside data frames to split analyses across separate groups:
+iris %>% 
+  split(.$Species) %>% 
+  map(~summary(.x))     # iterate a summary function over split lists of data
+
+
+# From chattr prompt: "I have a list of three vectors containing fish count data. Write a for-loop to calculate the mean of each, and then show me the exact parallel way to do it using purrr's map_dbl function."
+
+# Sample data
+fish_counts_list <- list(
+  river_a = c(10, 12, 8, 15, 11),
+  lake_b = c(25, 22, 28, 20, 26, 24),
+  stream_c = c(5, 7, 6, 9)
+)
+
+# Using a for-loop
+mean_counts_for <- vector("numeric", length(fish_counts_list))
+names(mean_counts_for) <- names(fish_counts_list)
+
+for (i in seq_along(fish_counts_list)) {
+  mean_counts_for[i] <- mean(fish_counts_list[[i]])
+}
+
+mean_counts_for
+
+# Using purrr map function:
+mean_counts_map <- map_dbl(fish_counts_list, mean)
+mean_counts_map
+
+```
+
+## Writing custom functions
+
+```{r Writing custom functions}
+
+# Function Definition
+calculate_coral_mortality <- function(initial_count, surviving_count) {
+  
+  # Logic safety switch using our conditional tools!
+  if (initial_count <= 0) {
+    stop("Initial count must be greater than zero.")
+  }
+  
+  mortality_rate <- (initial_count - surviving_count) / initial_count
+  return(mortality_rate)
+  
+}
+
+# Utilizing your custom function
+calculate_coral_mortality(initial_count = 120, surviving_count = 84)
+
+
+# Custom function: convert temperature from degrees celcius to degrees fahrenheit
+convert_temp_c_to_f <- function(C) {
+  
+  # conditional safety check
+  if (C < -273.15) {
+    stop("Cannot be below absolute zero!")
+  }
+  
+  fahrenheit <- (C * 9/5) + 32
+  #return(fahrenheit)
+  print(paste(C, "\u00B0C =", round(fahrenheit, digits = 2), "\u00B0F."))
+}
+
+convert_temp_c_to_f(22)
+convert_temp_c_to_f(50)
+convert_temp_c_to_f(35)
+convert_temp_c_to_f(-16)
+```
+
+## Advanced Scripting Challenges
+
+All comments were used with `chattr` to generate my code.
+
+```{r Scripting Challenge 1}
+# -- Challenge 1: Nested Multi-Vector Iteration --
+
+# In real-world field surveys, calculations often depend on matching values across multiple lists or matrices. Read the documentation for purrr::map2_dbl(). Given a vector of raw survey counts counts <- c(15, 24, 8, 42) and a vector of species-specific scaling factors factors <- c(1.2, 0.8, 2.5, 1.1), write a mapping statement that iterates across both vectors simultaneously to return a single vector of scaled abundance values. Do not use a manual index loop.
+
+counts <- c(15, 24, 8, 42)
+factors <- c(1.2, 0.8, 2.5, 1.1)
+
+map2_dbl(counts, factors, .f = `*`)
+```
+
+```{r Scripting Challenge 2}
+# -- Challenge 2: The Robust Data Wrangling Pipeline Function --
+
+# Create a custom function named clean_and_classify_survey that handles complex data frame structures. The function must fulfill these criteria:
+    # Accept a data frame and a column name threshold parameter as inputs.
+    # Safely check if the specified column name exists within the passed data frame; if it does not, trigger a user-friendly error message using stop().
+    # Filter out rows containing missing values (NA) within that specific column.
+    # Use the pipe operator and mutate() along with a vectorised conditional (if_else() or case_when()) to append a status string variable classification based on your threshold parameter.
+    # Return the cleaned, altered data frame to the global environment.
+
+# Test your custom pipeline using a mock tibble that contains at least one missing value to confirm your code handles anomalies without crashing.
+
+clean_and_classify_survey <- function(df, col_name, threshold) {
+  # Safely check if the specified column name exists
+  if (!col_name %in% names(df)) {
+    stop(paste0("Error: Column '", col_name, "' not found in the data frame."))
+  }
+
+  # Convert col_name to a symbol for tidy evaluation
+  col_sym <- sym(col_name)
+
+  df %>%
+    # Filter out rows containing missing values (NA) within that specific column
+    filter(!is.na(!!col_sym)) %>%
+    # Append a status string variable 'classification' based on the threshold
+    mutate(classification = if_else(!!col_sym > threshold, "High", "Low"))
+}
+
+# Test your custom pipeline using a mock tibble
+mock_survey_data <- tibble::tibble(
+  plot_id = 1:7,
+  species_count = c(15, 24, NA, 8, 42, 12, NA),
+  habitat_type = c("Forest", "Grassland", "Forest", "Wetland", "Grassland", "Forest", "Wetland")
+)
+
+# Test 1: Successful run with valid column and NAs handled
+cleaned_classified_data <- clean_and_classify_survey(mock_survey_data, "species_count", 20)
+print(cleaned_classified_data)
+
+# Test 2: Confirm your code handles anomalies without crashing (non-existent column)
+# This will trigger the stop() error message
+tryCatch({
+  clean_and_classify_survey(mock_survey_data, "apple", 20)
+}, error = function(e) {
+  message(e$message)
+})
+```
