@@ -6,7 +6,6 @@
 .DS_Store
 
 # Extensions to ignore
-*.html
 *.png
 *.jpg
 *.jpeg
