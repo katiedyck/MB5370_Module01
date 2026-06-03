@@ -6,6 +6,7 @@ oexecute:
   echo: false
 format:
     html:
+        embed-resources: true
         code-fold: show
         code-summary: "Show code"
         code-tools: true
