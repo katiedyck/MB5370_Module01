@@ -8,7 +8,6 @@ format:
     html:
         embed-resources: true
         code-fold: show
-        code-summary: "Show code"
         code-tools: true
         code-block-bg: true
         code-block-border-left: "darkgrey"
@@ -26,9 +25,53 @@ format:
         fig-cap-location: bottom
 ---
 
+# Introduction
+
+This qmd file includes all material covered from the "Introduction to Programming" workshops. The material covered includes:
+
+- **Workshop 1: *A Basic Introduction to R***
+  - Variables
+  - Functions
+  - Debugging code
+  - Data types
+  - Data structures
+  - Data frames and tibbles
+  - Installing and loading package libraries
+  - Best coding practices
+- **Workshop 2: *Data Visualization***
+  - `ggplot2` package
+  - Setting plot aesthetics (`aes()`) and geoms (`geom()`)
+- **Workshop 3: *Reproducible Research in Marine Science***
+  - Linking RStudio to GitHub
+- **Workshop 4: *Developers Toolbox and AI***
+  - Using GitHub's Copilot feature to help generate R code
+  - Using Google Gemini and R `chattr` package to help generate R code
+  - `if()` / `else()` / `if_else()` / `case_when()`
+  - for loops
+  - `purrr` package
+  - How to write custom functions
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+  echo = TRUE,
+  include = TRUE,
+  message = FALSE,
+  warning = FALSE)
 ```
+
+## Housekeeping
+```{r Clear session environment}
+# Inventory every active object currently residing in session RAM
+objects()
+
+# Purge global environment
+rm(list = ls())
+
+# Confirm that global session memory is now vacant
+objects()
+```
+
+## Load necessary packages
 
 ```{r load packages}
 # load packages
@@ -36,9 +79,10 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(palmerpenguins)
 library(purrr)
+library(usethis)
 ```
 
-```{r}
+```{r, eval=FALSE}
 getwd()
 ```
 
@@ -434,10 +478,9 @@ ggplot(penguins, aes(x = species, y = flipper_length_mm, colour = species)) +
 
 # **Workshop 3: Reproducible Research in Marine Science**
 
+The R package library `usethis` needs to be installed and loaded in order to run the code below.
+
 ```{r linking GitHub and RStudio}
-
-library(usethis)
-
 # in the console:
   # credentials::git_credential_ask()
   # usethis::git_sitrep()
@@ -464,8 +507,9 @@ All 3 of the graphs below were created using Copilot, an AI coding assistant tha
 
 ## GitHub Copilot
 
-```{r Copilot}
+All comments in the code chunk below were used to create the accompanying code using Copilot.
 
+```{r Copilot}
 # Load tidyverse and palmerpenguins libraries
 library(tidyverse)
 library(palmerpenguins)
@@ -518,7 +562,6 @@ ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
 ## Google Gemini & `chattr`
 
 ```{r setting up & installing Google Gemini and chattr}
-
 # in the console --> usethis::edit_r_environ()
   # in the console --> GEMINI_API_KEY="<my_custom_code>"
   # save the .Renviron file
@@ -538,7 +581,6 @@ ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
 ## `if()` / `else()`
 
 ```{r Base R: if and else}
-
 # Simple Example: Checking Sea Surface Temperature (SST)
 sst <- 30.2
 
@@ -552,7 +594,6 @@ if (sst > 29.5) {
 ## `if_else()` / `case_when()`
 
 ```{r dplyr: if_else(), case_when()}
-
 # Sample coral data
 coral_monitoring <- tibble(
   site = c("Site_A", "Site_B", "Site_C"),
@@ -584,7 +625,6 @@ coral_monitoring
 ## Create a tibble with `chattr`
 
 ```{r Creating a tibble with chattr}
-
 # Entered into a chattr chat: 
 #   Write a script that creates a tibble named marine_stations that contains a column called salinity with values 35, 28, 32, and 12. Use the pipe operator (%>%) and mutate() combined with case_when() to create a new column called environment_type. Classify values below 15 as "Estuarine", values between 15 and 30 as "Brackish", and values above 30 as "Marine".
 
@@ -605,7 +645,6 @@ marine_stations
 ## for loops
 
 ```{r Base R: for loops}
-
 # Classic loop anatomy
 
 for (year in 2020:2024) {
@@ -629,7 +668,6 @@ for (i in number_turtles) {
 ## Programming with the `purrr` package
 
 ```{r Tidyverse Alternative: Functional Programming (purrr)}
-
 # Different map functions in the `purrr` package map a specific operation onto every item in a list or vector, automatically ensuring that your output matches the precise data structure you expect.
 
 # Using a standard for-loop:
@@ -680,7 +718,6 @@ mean_counts_map
 ## Writing custom functions
 
 ```{r Writing custom functions}
-
 # Function Definition
 calculate_coral_mortality <- function(initial_count, surviving_count) {
   
@@ -721,10 +758,10 @@ convert_temp_c_to_f(-16)
 
 All comments were used with `chattr` to generate my code.
 
-```{r Scripting Challenge 1}
-# -- Challenge 1: Nested Multi-Vector Iteration --
+### Challenge 1: Nested Multi-Vector Iteration
 
-# In real-world field surveys, calculations often depend on matching values across multiple lists or matrices. Read the documentation for purrr::map2_dbl(). Given a vector of raw survey counts counts <- c(15, 24, 8, 42) and a vector of species-specific scaling factors factors <- c(1.2, 0.8, 2.5, 1.1), write a mapping statement that iterates across both vectors simultaneously to return a single vector of scaled abundance values. Do not use a manual index loop.
+```{r Scripting Challenge 1}
+# Given a vector of raw survey counts, counts <- c(15, 24, 8, 42), and a vector of species-specific scaling factors, factors <- c(1.2, 0.8, 2.5, 1.1), write a mapping statement that iterates across both vectors simultaneously to return a single vector of scaled abundance values. Do not use a manual index loop.
 
 counts <- c(15, 24, 8, 42)
 factors <- c(1.2, 0.8, 2.5, 1.1)
@@ -732,50 +769,51 @@ factors <- c(1.2, 0.8, 2.5, 1.1)
 map2_dbl(counts, factors, .f = `*`)
 ```
 
+### Challenge 2: The Robust Data Wrangling Pipeline Function
+
 ```{r Scripting Challenge 2}
-# -- Challenge 2: The Robust Data Wrangling Pipeline Function --
+# Create a custom function, "clean_and_classify_survey", that can handle complex data frame structures. The function must be able to: accept a data frame (df) and a column name threshold parameter as inputs; safely check if the specified column name exists within the passed data frame, if not it triggers a user-friendly error message using stop(); filter out rows containing missing values (NA) within the specific column; use the pipe operator and mutate() along with a vectorised conditional (if_else() or case_when()) to append a status string variable classification based on the threshold parameter; return the cleaned, altered data frame to the global environment. Test the custom pipeline using a mock tibble that contains at least one missing value to confirm the code handles anomalies without crashing.
 
-# Create a custom function named clean_and_classify_survey that handles complex data frame structures. The function must fulfill these criteria:
-    # Accept a data frame and a column name threshold parameter as inputs.
-    # Safely check if the specified column name exists within the passed data frame; if it does not, trigger a user-friendly error message using stop().
-    # Filter out rows containing missing values (NA) within that specific column.
-    # Use the pipe operator and mutate() along with a vectorised conditional (if_else() or case_when()) to append a status string variable classification based on your threshold parameter.
-    # Return the cleaned, altered data frame to the global environment.
-
-# Test your custom pipeline using a mock tibble that contains at least one missing value to confirm your code handles anomalies without crashing.
-
-clean_and_classify_survey <- function(df, col_name, threshold) {
+clean_and_classify_survey <- function(df, column_name, threshold) {
   # Safely check if the specified column name exists
-  if (!col_name %in% names(df)) {
-    stop(paste0("Error: Column '", col_name, "' not found in the data frame."))
+  if (!column_name %in% names(df)) {
+    stop(paste0("Error: Column '", column_name, "' not found in the data frame."))
   }
 
-  # Convert col_name to a symbol for tidy evaluation
-  col_sym <- sym(col_name)
+  # Convert column_name to a symbol for tidy evaluation
+  col_sym <- sym(column_name)
 
-  df %>%
-    # Filter out rows containing missing values (NA) within that specific column
+  df_cleaned <- df %>%
+    # Filter out rows containing missing values (NA) within the specific column
     filter(!is.na(!!col_sym)) %>%
-    # Append a status string variable 'classification' based on the threshold
-    mutate(classification = if_else(!!col_sym > threshold, "High", "Low"))
+    # Append a status string variable classification based on the threshold
+    mutate(status = if_else(!!col_sym >= threshold, "High Performer", "Low Performer"))
+
+  return(df_cleaned)
 }
 
-# Test your custom pipeline using a mock tibble
-mock_survey_data <- tibble::tibble(
-  plot_id = 1:7,
-  species_count = c(15, 24, NA, 8, 42, 12, NA),
-  habitat_type = c("Forest", "Grassland", "Forest", "Wetland", "Grassland", "Forest", "Wetland")
+# Create a mock tibble for testing
+mock_survey_data <- tibble(
+  respondent_id = 101:105,
+  satisfaction_score = c(85, NA, 92, 78, 60),
+  feedback_category = c("Positive", "Neutral", "Positive", "Negative", "Neutral"),
+  completion_date = as.Date(c("2023-10-26", "2023-10-27", "2023-10-28", "2023-10-29", "2023-10-30"))
 )
+print(mock_survey_data)
 
-# Test 1: Successful run with valid column and NAs handled
-cleaned_classified_data <- clean_and_classify_survey(mock_survey_data, "species_count", 20)
-print(cleaned_classified_data)
+# Test 1: Happy path with existing column and NAs
+cleaned_data_1 <- clean_and_classify_survey(
+  df = mock_survey_data,
+  column_name = "satisfaction_score",
+  threshold = 80
+)
+print(cleaned_data_1)
 
-# Test 2: Confirm your code handles anomalies without crashing (non-existent column)
-# This will trigger the stop() error message
-tryCatch({
-  clean_and_classify_survey(mock_survey_data, "apple", 20)
-}, error = function(e) {
-  message(e$message)
-})
+# Test 2: Verify error handling for a non-existent column
+# This will stop execution and print the custom error message
+    # cleaned_data_2 <- clean_and_classify_survey(
+    #   df = mock_survey_data,
+    #   column_name = "non_existent_column",
+    #   threshold = 80
+    # )
 ```
