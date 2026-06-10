@@ -2,8 +2,6 @@
 title: "Module 1: Introduction to Programming"
 author: "Katie Dyck"
 date: "2026-05-20"
-oexecute:
-  echo: false
 format:
     html:
         embed-resources: true
@@ -53,14 +51,18 @@ This qmd file includes all material covered from the "Introduction to Programmin
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  echo = TRUE,
+  echo = FALSE,
   include = TRUE,
   message = FALSE,
   warning = FALSE)
 ```
 
-## Housekeeping
+# Housekeeping
+
+Purge the global environment with the command `rm(list = ls())`.
 ```{r Clear session environment}
+#| output: false
+
 # Inventory every active object currently residing in session RAM
 objects()
 
@@ -71,11 +73,10 @@ rm(list = ls())
 objects()
 ```
 
-## Load necessary packages
+# Load packages
 
+Packages needed for this module are `tidyverse`, `palmerpenguins`, `purrr`, and `usethis`. 
 ```{r load packages}
-# load packages
-
 library(tidyverse)
 library(palmerpenguins)
 library(purrr)
@@ -88,9 +89,12 @@ getwd()
 
 # **Workshop 1: Introduction**
 
-This section contains code and programming from the first workshop. A basic introduction to R.
+This workshop covered a basic introduction to coding in R.
 
-```{r Workshop 1 Code}
+```{r Workshop 1 Code, echo=TRUE}
+#| output: false
+#| code-fold: true
+
 ## ------ Getting Started ------ ####
 # This section introduces us to R by using it as a simple calculator.
 
@@ -265,7 +269,9 @@ str(my_dataframe)
 
 # **Workshop 2: Data Visualization**
 
-```{r mpg dataset}
+This workshop covered different ways to visualize data in R.
+
+```{r mpg dataset, echo=TRUE}
 str(mpg)
 # "displ" = engine size (litres)
 # "hwy" = car's fuel efficiency (mpg)
@@ -273,7 +279,10 @@ str(mpg)
 
 ## Create a `ggplot`
 
+The `ggplot2` package library allows you to visualize different relationships that exist within one or multiple datasets.
 ```{r Basic ggplots}
+#| code-fold: true
+
 # These create the exact same plot:
 ggplot(mpg) +
     geom_point(aes(x = displ, y = hwy))
@@ -310,6 +319,8 @@ ggplot(mpg, aes(displ, hwy, colour = displ < 5)) +
 ```
 
 ```{r facet_wrap() and facet_grid()}
+#| code-fold: true
+
 ggplot(mpg, aes(displ, hwy, colour = drv)) +
     geom_jitter() +
     facet_wrap(~ drv) +
@@ -338,6 +349,8 @@ ggplot(mpg) +
 ```
 
 ```{r}
+#| code-fold: true
+
 ggplot(mpg) +
     geom_smooth(aes(displ, hwy))
 
@@ -351,6 +364,8 @@ ggplot(mpg, aes(displ, hwy)) +
 ```
 
 ```{r}
+#| code-fold: true
+
 ggplot(mpg) +
     geom_smooth(aes(displ, hwy, linetype = drv))
 ```
@@ -358,6 +373,8 @@ ggplot(mpg) +
 You can create plots with multiple geoms to show relationships between different variables in the data:
 
 ```{r Using multiple geoms}
+#| code-fold: true
+
 ggplot(mpg) +
     geom_point(aes(displ, hwy, colour = drv)) +
     geom_smooth(aes(displ, hwy, colour = drv, linetype = drv))
@@ -366,6 +383,8 @@ ggplot(mpg) +
 You can use mapping in specific layers to enable the display of different aesthetics in different layers:
 
 ```{r Advanced plots}
+#| code-fold: true
+
 ggplot(mpg, aes(displ, hwy)) +
     geom_smooth() +
     geom_point(aes(colour = class))
@@ -378,27 +397,33 @@ ggplot(mpg, aes(displ, hwy)) +
 
 ## Transformations and Stats
 
-```{r diamonds dataset}
+```{r diamonds dataset, echo=TRUE}
 str(diamonds)
 ```
 
-```{r diamonds plot 1}
+```{r diamonds plot 1, echo=TRUE}
+#| code-fold: true
+
 ggplot(diamonds) +
     geom_bar(aes(x = cut))
 ```
 
--   *bar charts*, *histograms*, and *frequency polygrams* "bin" data and then plot bin counts (the number of data points that fall in each bin).
--   *smoothers* fit a model to the data and then plot predictions from the model.
--   *boxplots* compute a summary of the distribution and then display a specially formatted box.
+-   **bar charts**, **histograms**, and **frequency polygrams** "bin" data and then plot bin counts (the number of data points that fall in each bin).
+-   **smoothers** fit a model to the data and then plot predictions from the model.
+-   **boxplots** compute a summary of the distribution and then display a specially formatted box.
 
 `geoms` and `stats` can generally be used interchangeably.
 
-```{r diamonds plot 2}
+```{r diamonds plot 2, echo=TRUE}
+#| code-fold: true
+
 ggplot(diamonds) +
     stat_count(mapping = aes(x = cut))
 ```
 
-```{r Overriding ggplot defaults}
+```{r Overriding ggplot defaults, echo=TRUE}
+#| code-fold: true
+
 demo <- tribble(
     ~cut, ~freq,
     "Fair", 1610,
@@ -429,7 +454,9 @@ ggplot(diamonds) +
 
 Adjusting the aesthetics (`aes()`) allows you to modify how your plot looks and what relationships it shows:
 
-```{r Aesthetic adjustments}
+```{r Aesthetic adjustments, echo=TRUE}
+#| code-fold: true
+
 # for bar plots, 'colour' changes the OUTLINE colour
 ggplot(diamonds) +
     geom_bar(mapping = aes(x = cut, colour = cut))
@@ -461,7 +488,10 @@ ggplot(diamonds) +
 ggplot(diamonds) +
     geom_bar(aes(x = cut, fill = clarity), position = "jitter")
 ```
-```{r penguins dataset}
+
+```{r penguins dataset, echo=TRUE}
+#| code-fold: true
+
 str(penguins)
 
 ggplot(penguins, aes(x = species, fill = species)) +
@@ -478,9 +508,11 @@ ggplot(penguins, aes(x = species, y = flipper_length_mm, colour = species)) +
 
 # **Workshop 3: Reproducible Research in Marine Science**
 
-The R package library `usethis` needs to be installed and loaded in order to run the code below.
+The R package library `usethis` needs to be installed and loaded in order to run the code below, which is required for linking your GitHub account to RStudio.
 
-```{r linking GitHub and RStudio}
+```{r linking GitHub and RStudio, echo=TRUE}
+#| code-fold: true
+
 # in the console:
   # credentials::git_credential_ask()
   # usethis::git_sitrep()
@@ -509,7 +541,7 @@ All 3 of the graphs below were created using Copilot, an AI coding assistant tha
 
 All comments in the code chunk below were used to create the accompanying code using Copilot.
 
-```{r Copilot}
+```{r Copilot, echo=TRUE}
 # Load tidyverse and palmerpenguins libraries
 library(tidyverse)
 library(palmerpenguins)
@@ -561,7 +593,8 @@ ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
 
 ## Google Gemini & `chattr`
 
-```{r setting up & installing Google Gemini and chattr}
+The code below was install Google Gemini and the `chattr` library before connecting them to RStudio.
+```{r setting up & installing Google Gemini and chattr, echo=TRUE}
 # in the console --> usethis::edit_r_environ()
   # in the console --> GEMINI_API_KEY="<my_custom_code>"
   # save the .Renviron file
@@ -580,7 +613,9 @@ ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
 
 ## `if()` / `else()`
 
-```{r Base R: if and else}
+```{r Base R: if and else, echo=TRUE}
+#| code-fold: true
+
 # Simple Example: Checking Sea Surface Temperature (SST)
 sst <- 30.2
 
@@ -593,7 +628,9 @@ if (sst > 29.5) {
 
 ## `if_else()` / `case_when()`
 
-```{r dplyr: if_else(), case_when()}
+```{r dplyr: if_else(), case_when(), echo=TRUE}
+#| code-fold: true
+
 # Sample coral data
 coral_monitoring <- tibble(
   site = c("Site_A", "Site_B", "Site_C"),
@@ -624,9 +661,9 @@ coral_monitoring
 
 ## Create a tibble with `chattr`
 
-```{r Creating a tibble with chattr}
-# Entered into a chattr chat: 
-#   Write a script that creates a tibble named marine_stations that contains a column called salinity with values 35, 28, 32, and 12. Use the pipe operator (%>%) and mutate() combined with case_when() to create a new column called environment_type. Classify values below 15 as "Estuarine", values between 15 and 30 as "Brackish", and values above 30 as "Marine".
+The code below was creating by entering the prompt into `chattr`.
+```{r Creating a tibble with chattr, echo=TRUE}
+# Write a script that creates a tibble named marine_stations that contains a column called salinity with values 35, 28, 32, and 12. Use the pipe operator (%>%) and mutate() combined with case_when() to create a new column called environment_type. Classify values below 15 as "Estuarine", values between 15 and 30 as "Brackish", and values above 30 as "Marine".
 
 marine_stations <- tibble(salinity = c(35, 28, 32, 12)) %>%
   mutate(
@@ -644,9 +681,10 @@ marine_stations
 
 ## for loops
 
-```{r Base R: for loops}
-# Classic loop anatomy
+```{r Base R: for loops, echo=TRUE}
+#| code-fold: true
 
+# Classic loop anatomy
 for (year in 2020:2024) {
   print(paste("Processing climate data for year:", year))
 }
@@ -667,8 +705,10 @@ for (i in number_turtles) {
 
 ## Programming with the `purrr` package
 
-```{r Tidyverse Alternative: Functional Programming (purrr)}
-# Different map functions in the `purrr` package map a specific operation onto every item in a list or vector, automatically ensuring that your output matches the precise data structure you expect.
+Different map functions in the `purrr` package map a specific operation onto every item in a list or vector, automatically ensuring that your output matches the precise data structure you expect.
+
+```{r Tidyverse Alternative: Functional Programming (purrr), echo=TRUE}
+#| code-fold: true
 
 # Using a standard for-loop:
 site_areas <- c(144, 400, 625)
@@ -707,17 +747,19 @@ for (i in seq_along(fish_counts_list)) {
   mean_counts_for[i] <- mean(fish_counts_list[[i]])
 }
 
-mean_counts_for
+print(mean_counts_for)
 
 # Using purrr map function:
 mean_counts_map <- map_dbl(fish_counts_list, mean)
-mean_counts_map
+print(mean_counts_map)
 
 ```
 
 ## Writing custom functions
 
-```{r Writing custom functions}
+```{r Writing custom functions, echo=TRUE}
+#| code-fold: true
+
 # Function Definition
 calculate_coral_mortality <- function(initial_count, surviving_count) {
   
@@ -756,11 +798,11 @@ convert_temp_c_to_f(-16)
 
 ## Advanced Scripting Challenges
 
-All comments were used with `chattr` to generate my code.
+The paragraphs in the comments below were entered into `chattr` to generate my code.
 
 ### Challenge 1: Nested Multi-Vector Iteration
 
-```{r Scripting Challenge 1}
+```{r Scripting Challenge 1, echo=TRUE}
 # Given a vector of raw survey counts, counts <- c(15, 24, 8, 42), and a vector of species-specific scaling factors, factors <- c(1.2, 0.8, 2.5, 1.1), write a mapping statement that iterates across both vectors simultaneously to return a single vector of scaled abundance values. Do not use a manual index loop.
 
 counts <- c(15, 24, 8, 42)
@@ -771,7 +813,7 @@ map2_dbl(counts, factors, .f = `*`)
 
 ### Challenge 2: The Robust Data Wrangling Pipeline Function
 
-```{r Scripting Challenge 2}
+```{r Scripting Challenge 2, echo=TRUE}
 # Create a custom function, "clean_and_classify_survey", that can handle complex data frame structures. The function must be able to: accept a data frame (df) and a column name threshold parameter as inputs; safely check if the specified column name exists within the passed data frame, if not it triggers a user-friendly error message using stop(); filter out rows containing missing values (NA) within the specific column; use the pipe operator and mutate() along with a vectorised conditional (if_else() or case_when()) to append a status string variable classification based on the threshold parameter; return the cleaned, altered data frame to the global environment. Test the custom pipeline using a mock tibble that contains at least one missing value to confirm the code handles anomalies without crashing.
 
 clean_and_classify_survey <- function(df, column_name, threshold) {
