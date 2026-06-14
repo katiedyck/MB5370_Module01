@@ -1,25 +1,27 @@
 ---
-title: "Module 1: Introduction to Programming Workshops"
+title: "Module 1: Programming Fundamentals"
 author: "Katie Dyck"
 date: "2026-05-20"
 format:
-    html:
-        embed-resources: true
-        code-fold: show
-        code-block-bg: true
-        code-block-border-left: "darkgrey"
-        code-overflow: wrap
-        toc: true
-        number-sections: true
-        number-depth: 4
-        toc-location: left
-        toc-expand: 2
-        toc-title: Contents
-        syntax-highlighting: github
-        theme: cosmo
-        fig-height: 6
-        fig-width: 10
-        fig-cap-location: bottom
+  html:
+      embed-resources: true
+      code-fold: show
+      code-copy: hover
+      code-block-bg: true
+      code-block-border-left: "grey25"
+      code-overflow: wrap
+      toc: true
+      number-sections: true
+      number-depth: 4
+      toc-location: left
+      toc-expand: 3
+      toc-title: Contents
+      syntax-highlighting: github
+      theme: cosmo
+      title-block-banner: true
+      fig-height: 6
+      fig-width: 10
+      fig-cap-location: bottom
 ---
 
 # Introduction
