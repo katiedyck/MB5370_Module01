@@ -1,12 +1,11 @@
 ---
-title: "Module 1: Introduction to Programming"
+title: "Module 1: Introduction to Programming Workshops"
 author: "Katie Dyck"
 date: "2026-05-20"
 format:
     html:
         embed-resources: true
         code-fold: show
-        code-tools: true
         code-block-bg: true
         code-block-border-left: "darkgrey"
         code-overflow: wrap
@@ -81,10 +80,6 @@ library(tidyverse)
 library(palmerpenguins)
 library(purrr)
 library(usethis)
-```
-
-```{r, eval=FALSE}
-getwd()
 ```
 
 # **Workshop 1: Introduction**
@@ -269,9 +264,11 @@ str(my_dataframe)
 
 # **Workshop 2: Data Visualization**
 
-This workshop covered different ways to visualize data in R.
+This workshop covered different ways to visualize data in R. We used the dataset `mpg`, which contains information on the fuel economy of various car models from 1999 to 2008.
 
 ```{r mpg dataset, echo=TRUE}
+#| code-fold: true
+
 str(mpg)
 # "displ" = engine size (litres)
 # "hwy" = car's fuel efficiency (mpg)
@@ -280,12 +277,9 @@ str(mpg)
 ## Create a `ggplot`
 
 The `ggplot2` package library allows you to visualize different relationships that exist within one or multiple datasets.
-```{r Basic ggplots}
+```{r Basic ggplots, echo=TRUE}
 #| code-fold: true
 
-# These create the exact same plot:
-ggplot(mpg) +
-    geom_point(aes(x = displ, y = hwy))
 ggplot(mpg, aes(displ, hwy)) +
     geom_point()
 
@@ -310,15 +304,13 @@ ggplot(mpg, aes(displ, hwy, size = drv)) +
 ggplot(mpg, aes(displ, hwy, color = drv, shape = drv, size = drv)) +
     geom_point()
 
-ggplot(mpg, aes(displ, hwy, color = drv, shape = drv, size = drv, alpha = drv)) +
-    geom_point()
-# adding "alpha" isn't necessary in this case
-
 ggplot(mpg, aes(displ, hwy, colour = displ < 5)) +
     geom_point()
 ```
 
-```{r facet_wrap() and facet_grid()}
+`facet_wrap()` and `facet_grid()` allow you to visualize the data in ways that make relationships between variables (particularly those that are discrete or factored) clearer.
+
+```{r facet_wrap() and facet_grid(), echo=TRUE}
 #| code-fold: true
 
 ggplot(mpg, aes(displ, hwy, colour = drv)) +
@@ -326,8 +318,7 @@ ggplot(mpg, aes(displ, hwy, colour = drv)) +
     facet_wrap(~ drv) +
     theme(legend.position = "none",
           plot.title = element_text(face = "bold")) +
-    labs(title = "Fuel efficiency vs. engine size, sorted by drive train type",
-         x = "Engine displacement (L)",
+    labs(x = "Engine displacement (L)",
          y = "Highway (mpg)")
 
 ggplot(mpg) +
@@ -348,22 +339,25 @@ ggplot(mpg) +
     facet_grid(drv ~ .)
 ```
 
-```{r}
+`geom_smooth()` makes it easier to visualize patterns in the data, particularly when there are many data points present.
+
+```{r, echo=TRUE}
 #| code-fold: true
 
-ggplot(mpg) +
-    geom_smooth(aes(displ, hwy))
+ggplot(mpg, aes(displ, hwy)) +
+    geom_point() +
+    geom_smooth(se = FALSE) +   # method = "loess" (default)
+    labs(caption = "Smoothing method = `loess`")
 
 ggplot(mpg, aes(displ, hwy)) +
     geom_point() +
-    geom_smooth(se = FALSE)
-
-ggplot(mpg, aes(displ, hwy)) +
-    geom_point() +
-    geom_smooth(method = "lm", se = FALSE)  # lm = 
+    geom_smooth(method = "lm", se = FALSE) +
+    labs(caption = "Smoothing method = `lm`")
 ```
 
-```{r}
+`geom_smooth()` can accept a variable for the `linetype` argument, which allows you to visualize how the data changes for different values of a specific variable. The graph below shows how highway miles per gallon changes with engine displacement (in litres) between different types of drive train (4-wheel drive, front-wheel drive, and rear-wheel drive).
+
+```{r, echo=TRUE}
 #| code-fold: true
 
 ggplot(mpg) +
@@ -372,7 +366,7 @@ ggplot(mpg) +
 
 You can create plots with multiple geoms to show relationships between different variables in the data:
 
-```{r Using multiple geoms}
+```{r Using multiple geoms, echo=TRUE}
 #| code-fold: true
 
 ggplot(mpg) +
@@ -380,9 +374,9 @@ ggplot(mpg) +
     geom_smooth(aes(displ, hwy, colour = drv, linetype = drv))
 ```
 
-You can use mapping in specific layers to enable the display of different aesthetics in different layers:
+You can use mapping in specific layers to enable the display of different aesthetics in different layers. In the second plot below, the aesthetics of the `geom_smooth()` layer have been filtered to only include subcompact cars.
 
-```{r Advanced plots}
+```{r Advanced plots, echo=TRUE}
 #| code-fold: true
 
 ggplot(mpg, aes(displ, hwy)) +
@@ -397,7 +391,11 @@ ggplot(mpg, aes(displ, hwy)) +
 
 ## Transformations and Stats
 
+The `diamonds` dataset contains information on over 50,000 cut diamonds.
+
 ```{r diamonds dataset, echo=TRUE}
+#| code-fold: true
+
 str(diamonds)
 ```
 
@@ -405,12 +403,13 @@ str(diamonds)
 #| code-fold: true
 
 ggplot(diamonds) +
-    geom_bar(aes(x = cut))
+  geom_bar(aes(x = cut))
 ```
+"Count" is not a variable in the `diamonds` dataset. Rather, the graph includes raw values of the dataset. Many graph types calculate new values to plot:
 
--   **bar charts**, **histograms**, and **frequency polygrams** "bin" data and then plot bin counts (the number of data points that fall in each bin).
--   **smoothers** fit a model to the data and then plot predictions from the model.
--   **boxplots** compute a summary of the distribution and then display a specially formatted box.
+- **bar charts**, **histograms**, and **frequency polygrams** "bin" data and then plot bin counts (the number of data points that fall in each bin).
+- **smoothers** fit a model to the data and then plot predictions from the model.
+- **boxplots** compute a summary of the distribution and then display a specially formatted box.
 
 `geoms` and `stats` can generally be used interchangeably.
 
@@ -420,6 +419,7 @@ ggplot(diamonds) +
 ggplot(diamonds) +
     stat_count(mapping = aes(x = cut))
 ```
+The tibble below contains the frequency of each diamond cut that appears in the dataset. We can use this table with the `stat` argument to override the default mapping.
 
 ```{r Overriding ggplot defaults, echo=TRUE}
 #| code-fold: true
@@ -452,7 +452,7 @@ ggplot(diamonds) +
     )
 ```
 
-Adjusting the aesthetics (`aes()`) allows you to modify how your plot looks and what relationships it shows:
+Adjusting the aesthetics allows you to modify how your plot looks.
 
 ```{r Aesthetic adjustments, echo=TRUE}
 #| code-fold: true
@@ -489,26 +489,12 @@ ggplot(diamonds) +
     geom_bar(aes(x = cut, fill = clarity), position = "jitter")
 ```
 
-```{r penguins dataset, echo=TRUE}
-#| code-fold: true
-
-str(penguins)
-
-ggplot(penguins, aes(x = species, fill = species)) +
-    geom_bar()
-
-ggplot(penguins, aes(x = species, y = sex, fill = island)) +
-    geom_col(position = "dodge")
-
-ggplot(penguins, aes(x = species, y = flipper_length_mm, colour = species)) +
-    geom_jitter() +
-    theme(legend.position = "none")
-```
-
 
 # **Workshop 3: Reproducible Research in Marine Science**
 
-The R package library `usethis` needs to be installed and loaded in order to run the code below, which is required for linking your GitHub account to RStudio.
+::: {.callout-note icon=FALSE}
+The R package library `usethis` must be installed and loaded in order to link your GitHub account to RStudio.
+:::
 
 ```{r linking GitHub and RStudio, echo=TRUE}
 #| code-fold: true
@@ -535,13 +521,13 @@ The R package library `usethis` needs to be installed and loaded in order to run
 
 # **Workshop 4: Developers Toolbox & AI**
 
-All 3 of the graphs below were created using Copilot, an AI coding assistant that can generate code based on natural language prompts. Comments in the code chunks indicate the prompts I used to generate the code for each graph.
-
 ## GitHub Copilot
 
-All comments in the code chunk below were used to create the accompanying code using Copilot.
+All 3 of the graphs below were created using Copilot, an AI coding assistant that can generate code based on natural language prompts. Comments in the code chunks indicate the prompts used to generate the code for each graph.
 
 ```{r Copilot, echo=TRUE}
+#| code-fold: true
+
 # Load tidyverse and palmerpenguins libraries
 library(tidyverse)
 library(palmerpenguins)
@@ -593,8 +579,10 @@ ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
 
 ## Google Gemini & `chattr`
 
-The code below was install Google Gemini and the `chattr` library before connecting them to RStudio.
+The code below was run to install Google Gemini and the `chattr` library before connecting them to RStudio.
 ```{r setting up & installing Google Gemini and chattr, echo=TRUE}
+#| code-fold: true
+
 # in the console --> usethis::edit_r_environ()
   # in the console --> GEMINI_API_KEY="<my_custom_code>"
   # save the .Renviron file
@@ -661,8 +649,10 @@ coral_monitoring
 
 ## Create a tibble with `chattr`
 
-The code below was creating by entering the prompt into `chattr`.
+The code below was creating by entering the comment into `chattr`.
 ```{r Creating a tibble with chattr, echo=TRUE}
+#| code-fold: true
+
 # Write a script that creates a tibble named marine_stations that contains a column called salinity with values 35, 28, 32, and 12. Use the pipe operator (%>%) and mutate() combined with case_when() to create a new column called environment_type. Classify values below 15 as "Estuarine", values between 15 and 30 as "Brackish", and values above 30 as "Marine".
 
 marine_stations <- tibble(salinity = c(35, 28, 32, 12)) %>%
@@ -712,11 +702,12 @@ Different map functions in the `purrr` package map a specific operation onto eve
 
 # Using a standard for-loop:
 site_areas <- c(144, 400, 625)
-results <- numeric(length(site_areas)) # Must build an empty container first
+results <- numeric(length(site_areas))  # Must build an empty container first
 
 for(i in seq_along(site_areas)) {
   results[i] <- sqrt(site_areas[i])
 }
+results
 
 # Using the purrr equivalent:
 # Map directly and define your expected output type explicitly
@@ -747,11 +738,11 @@ for (i in seq_along(fish_counts_list)) {
   mean_counts_for[i] <- mean(fish_counts_list[[i]])
 }
 
-print(mean_counts_for)
+mean_counts_for
 
 # Using purrr map function:
 mean_counts_map <- map_dbl(fish_counts_list, mean)
-print(mean_counts_map)
+mean_counts_map
 
 ```
 
