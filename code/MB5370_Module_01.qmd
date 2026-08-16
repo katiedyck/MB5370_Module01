@@ -278,29 +278,53 @@ str(mpg)
 
 ## Create a `ggplot`
 
-The `ggplot2` package library allows you to visualize different relationships that exist within one or multiple datasets.
+The `ggplot2` package library allows you to visualize different relationships that exist within one or multiple datasets. There are many different ways that plots can be customised when using this package.
 ```{r Basic ggplots, echo=TRUE}
 #| code-fold: true
 
 ggplot(mpg, aes(displ, hwy)) +
     geom_point()
+```
+
+Setting an `alpha` value changes the transparency of data points and lines:
+```{r ggplot2 alpha, echo=TRUE}
+#| code-fold: true
 
 # change transparency by class (alpha)
 ggplot(mpg, aes(displ, hwy, alpha = drv)) +
     geom_point()
+```
+
+You can set a specific `color` for one (or multiple) variables:
+```{r ggplot2 color, echo=TRUE}
+#| code-fold: true
 
 # change colour by class
 ggplot(mpg, aes(displ, hwy, color = drv)) +
     geom_point()
+```
+
+You change change the point `shape`:
+```{r ggplot2 point shape, echo=TRUE}
+#| code-fold: true
 
 # change point shape by class
 ggplot(mpg, aes(displ, hwy, shape = drv)) +
     geom_point()
+```
+
+You can change the point `size`:
+```{r ggplot2 point size, echo=TRUE}
+#| code-fold: true
 
 # change point size by class
-# change colour by class
 ggplot(mpg, aes(displ, hwy, size = drv)) +
     geom_point()
+```
+
+You can combine settings to change the appearance of variables and tell a story:
+```{r ggplot2 shape size and color}
+#| code-fold: true
 
 # change shape, size, AND colour by class
 ggplot(mpg, aes(displ, hwy, color = drv, shape = drv, size = drv)) +
@@ -315,17 +339,17 @@ ggplot(mpg, aes(displ, hwy, colour = displ < 5)) +
 ```{r facet_wrap() and facet_grid(), echo=TRUE}
 #| code-fold: true
 
-ggplot(mpg, aes(displ, hwy, colour = drv)) +
-    geom_jitter() +
-    facet_wrap(~ drv) +
-    theme(legend.position = "none",
-          plot.title = element_text(face = "bold")) +
-    labs(x = "Engine displacement (L)",
-         y = "Highway (mpg)")
+# ggplot(mpg, aes(displ, hwy, colour = drv)) +
+#     geom_jitter() +
+#     facet_wrap(~ drv) +
+#     theme(legend.position = "none",
+#           plot.title = element_text(face = "bold")) +
+#     labs(x = "Engine displacement (L)",
+#          y = "Highway (mpg)")
 
-ggplot(mpg) +
-    geom_point(aes(displ, hwy)) +
-    facet_wrap(~ class, nrow = 2)
+# ggplot(mpg) +
+#     geom_point(aes(displ, hwy)) +
+#     facet_wrap(~ class, nrow = 2)
 
 # facet_grid() is used with more than one variable
 ggplot(mpg) +
@@ -333,9 +357,9 @@ ggplot(mpg) +
     facet_grid(drv ~ cyl)
 
 # use a . if you don't want to facet in the rows or columns dimension
-ggplot(mpg) +
-    geom_point(aes(displ, hwy)) +
-    facet_grid(. ~ cyl)
+# ggplot(mpg) +
+#     geom_point(aes(displ, hwy)) +
+#     facet_grid(. ~ cyl)
 ggplot(mpg) +
     geom_point(aes(displ, hwy)) +
     facet_grid(drv ~ .)
@@ -343,6 +367,7 @@ ggplot(mpg) +
 
 `geom_smooth()` makes it easier to visualize patterns in the data, particularly when there are many data points present.
 
+-   `loess` (Locally Estimated Scatterplot Smoothing) line - fits a smooth, localised regression line that bends to show non-linear patterns.
 ```{r, echo=TRUE}
 #| code-fold: true
 
@@ -350,6 +375,11 @@ ggplot(mpg, aes(displ, hwy)) +
     geom_point() +
     geom_smooth(se = FALSE) +   # method = "loess" (default)
     labs(caption = "Smoothing method = `loess`")
+```
+
+-   `lm` (Linear Model) line - fits a single, straight linear regression line across the entire dataset.
+```{r, echo=TRUE}
+#| code-fold: true
 
 ggplot(mpg, aes(displ, hwy)) +
     geom_point() +
@@ -387,13 +417,13 @@ ggplot(mpg, aes(displ, hwy)) +
 
 ggplot(mpg, aes(displ, hwy)) +
     geom_point(aes(colour = class)) +
-    geom_smooth(data = filter(mpg, class == "subcompact"), se = FALSE) +
+    geom_smooth(data = filter(mpg, class == "subcompact")) +
     labs(caption = "Data has been filtered for class 'subcompact'")
 ```
 
 ## Transformations and Stats
 
-The `diamonds` dataset contains information on over 50,000 cut diamonds.
+The `diamonds` dataset (from the ggplot2 package) contains information on over 50,000 cut diamonds.
 
 ```{r diamonds dataset, echo=TRUE}
 #| code-fold: true
@@ -402,8 +432,6 @@ str(diamonds)
 ```
 
 ```{r diamonds plot 1, echo=TRUE}
-#| code-fold: true
-
 ggplot(diamonds) +
   geom_bar(aes(x = cut))
 ```
@@ -416,12 +444,10 @@ ggplot(diamonds) +
 `geoms` and `stats` can generally be used interchangeably.
 
 ```{r diamonds plot 2, echo=TRUE}
-#| code-fold: true
-
 ggplot(diamonds) +
     stat_count(mapping = aes(x = cut))
 ```
-The tibble below contains the frequency of each diamond cut that appears in the dataset. We can use this table with the `stat` argument to override the default mapping.
+The tibble below contains the frequency of each diamond `cut` that appears in the dataset. We can use this table with the `stat` argument to override the default mapping.
 
 ```{r Overriding ggplot defaults, echo=TRUE}
 #| code-fold: true
@@ -443,8 +469,12 @@ ggplot(demo) +
 # e.g. display a bar chart of the PROPORTION of your total diamond dataset rather than a count
 ggplot(diamonds) +
     geom_bar(aes(x = cut, y = stat(prop), group = 1))
+```
 
-# you can add statistical details to plots:
+You can add statistical details to plots (e.g. min, max, median):
+```{r, echo=TRUE}
+#| code-fold: true
+
 ggplot(diamonds) +
     stat_summary(
         mapping = aes(x = cut, y = depth),
@@ -454,11 +484,9 @@ ggplot(diamonds) +
     )
 ```
 
-Adjusting the aesthetics allows you to modify how your plot looks.
+Adjusting the aesthetics (`aes()`) allows you to modify how your plot looks.
 
 ```{r Aesthetic adjustments, echo=TRUE}
-#| code-fold: true
-
 # for bar plots, 'colour' changes the OUTLINE colour
 ggplot(diamonds) +
     geom_bar(mapping = aes(x = cut, colour = cut))
@@ -495,7 +523,7 @@ ggplot(diamonds) +
 # **Workshop 3: Reproducible Research in Marine Science**
 
 ::: {.callout-note icon=FALSE}
-The R package library `usethis` must be installed and loaded in order to link your GitHub account to RStudio.
+The R package library `usethis` **must** be installed and loaded in order to link your GitHub account to RStudio.
 :::
 
 ```{r linking GitHub and RStudio, echo=TRUE}
@@ -581,7 +609,7 @@ ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
 
 ## Google Gemini & `chattr`
 
-The code below was run to install Google Gemini and the `chattr` library before connecting them to RStudio.
+The code below was run in the R Console to install Google Gemini and the `chattr` library before connecting them to RStudio.
 ```{r setting up & installing Google Gemini and chattr, echo=TRUE}
 #| code-fold: true
 
@@ -604,8 +632,6 @@ The code below was run to install Google Gemini and the `chattr` library before 
 ## `if()` / `else()`
 
 ```{r Base R: if and else, echo=TRUE}
-#| code-fold: true
-
 # Simple Example: Checking Sea Surface Temperature (SST)
 sst <- 30.2
 
@@ -618,9 +644,7 @@ if (sst > 29.5) {
 
 ## `if_else()` / `case_when()`
 
-```{r dplyr: if_else(), case_when(), echo=TRUE}
-#| code-fold: true
-
+```{r dplyr if_else(), echo=TRUE}
 # Sample coral data
 coral_monitoring <- tibble(
   site = c("Site_A", "Site_B", "Site_C"),
@@ -631,12 +655,14 @@ coral_monitoring <- tibble(
 coral_monitoring <- coral_monitoring %>% 
   mutate(zone = if_else(depth_m > 30, "Deep Reef", "Shallow Reef"))
 coral_monitoring
+```
 
-  # mutate() creates a new column in the tibble based on the if_else() condition - if the reef is deeper than 30 meters it is classified as a Deep Reef, otherwise it is classified as a Shallow Reef
+-   `mutate()` creates a new column in the tibble based on the if_else condition - if the reef is deeper than 30 meters it is classified as a Deep Reef, otherwise it is classified as a Shallow Reef.
 
-  # %>% is the pipe operator. It allows you to pass a series of expressions; it passes the result of the expression that's on the left of the pipe as the first argument for the right-hand side function.
+-   `%>%` is the **pipe operator**. It allows you to pass a series of expressions; it passes the result of the expression that's on the left of the pipe as the first argument for the right-hand side function.
 
 
+```{r dplyr case_when(), echo=TRUE}
 coral_monitoring <- coral_monitoring %>% 
   mutate(reef_category = case_when(
     depth_m < 10  ~ "Lagoon / Flats",
@@ -645,16 +671,14 @@ coral_monitoring <- coral_monitoring %>%
     TRUE          ~ "Unclassified" # Catch-all remainder
   ))
 coral_monitoring
-
-# When you have more than two possibilities, stacking multiple if-else blocks becomes unreadable. case_when() provides a clean, sequential evaluation layout using formula tildes (~).
 ```
+
+When you have more than two possibilities, stacking multiple if-else blocks becomes unreadable. case_when() provides a clean, sequential evaluation layout using formula tildes (`~`).
 
 ## Create a tibble with `chattr`
 
 The code below was creating by entering the comment into `chattr`.
 ```{r Creating a tibble with chattr, echo=TRUE}
-#| code-fold: true
-
 # Write a script that creates a tibble named marine_stations that contains a column called salinity with values 35, 28, 32, and 12. Use the pipe operator (%>%) and mutate() combined with case_when() to create a new column called environment_type. Classify values below 15 as "Estuarine", values between 15 and 30 as "Brackish", and values above 30 as "Marine".
 
 marine_stations <- tibble(salinity = c(35, 28, 32, 12)) %>%
@@ -668,14 +692,11 @@ marine_stations <- tibble(salinity = c(35, 28, 32, 12)) %>%
   )
 
 marine_stations
-
 ```
 
 ## for loops
 
 ```{r Base R: for loops, echo=TRUE}
-#| code-fold: true
-
 # Classic loop anatomy
 for (year in 2020:2024) {
   print(paste("Processing climate data for year:", year))
@@ -700,8 +721,6 @@ for (i in number_turtles) {
 Different map functions in the `purrr` package map a specific operation onto every item in a list or vector, automatically ensuring that your output matches the precise data structure you expect.
 
 ```{r Tidyverse Alternative: Functional Programming (purrr), echo=TRUE}
-#| code-fold: true
-
 # Using a standard for-loop:
 site_areas <- c(144, 400, 625)
 results <- numeric(length(site_areas))  # Must build an empty container first
@@ -751,8 +770,6 @@ mean_counts_map
 ## Writing custom functions
 
 ```{r Writing custom functions, echo=TRUE}
-#| code-fold: true
-
 # Function Definition
 calculate_coral_mortality <- function(initial_count, surviving_count) {
   
