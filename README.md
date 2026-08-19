@@ -10,7 +10,7 @@ This repository documents four computer workshops from the JCU MB5370 Introducti
 | 4 | Developer's Toolbox & AI | AI tools that you can connect to RStudio to help you write and debug your code, specifically Google Gemini, R's `chattr` package, and GitHub Copilot. Covers the functions `if`, `else`, `if_else`, and `case_when`, and pipe operators (`%>%` and `|>`) which are used to manipulate R code. A basic introduction to writing your own R functions. |
 ---------------
 
-All four workshops are included within the same Quarto [document](code/MB5370_Module_01.qmd), saved in the `code` folder.
+My code from all four workshops are compiled in the same Quarto [document](code/MB5370_Module_01.qmd), saved in the `code` folder.
 
 ## R and RStudio
 **RStudio** is an integrated developer environment (IDE) designed for the R programming language. It is frequently used for computing statistics and visualizing data with the thousands of packages R has to offer. For RStudio to run, R must also be installed - thankfully, they are both free to download!
